@@ -6,7 +6,7 @@
 ```
 Exception in thread "main" java.lang.NullPointerException:
  Cannot assign field "x" because "this.loc" is null
-	at proj1.Ship.SetLoc(Ship.java:12)
+        at proj1.Ship.SetLoc(Ship.java:12)
 	at proj1.Voyage.Settings(Voyage.java:14)
 	at proj1.testDrive.main(testDrive.java:7)
 ```
@@ -14,7 +14,7 @@ Exception in thread "main" java.lang.NullPointerException:
 // main
 public static void main(String[] args) {  
     Voyage test = new Voyage();  
-	test.Settings(25, "path");  
+    test.Settings(25, "path");  
     test.Sail();  
 }
 ```
@@ -23,8 +23,8 @@ public class Voyage {
 	 ....
 	 public void Settings(int length,String path){  
 	      myship.SetLimit(length);  
-		  myship.SetLoc(length-1,0);  
-		  myship.SetStorage(path);  
+	      myship.SetLoc(length-1,0);  
+	      myship.SetStorage(path);  
      }
   
   
@@ -35,7 +35,7 @@ public class Ship {
     ...
     public void SetLoc(int x, int y) {  
         loc.x = x;  
-	    loc.y = y;  
+	loc.y = y;  
     }
 ```
 
