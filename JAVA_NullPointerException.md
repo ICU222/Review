@@ -65,11 +65,23 @@ public class Ship {
 이럴수가. 파이썬에 너무 심취한 나머지 모든 코드의 인스턴스 변수로 선언된 객체를 일반 변수와 같은 방법으로 선언하였던 것이다.....  
 
 모든 인스턴스 변수로 선언된 객체를 올바르게 선언해주자, 프로그램이 정상적으로 작동하였다....   
+
+생각해보니 모든 인스턴스 변수로 선언한 객체에서 이런 문장이 보였던 것 같다. 
+
+```
+Private field 'Instance variable' 
+is never assigned 
+```
+생각해보니 이 말이 맞았다. = new Instance(); 를 붙이지 않았으니깐......
+
  
  # 결론 
   NullPointerExcpetion : Cannot assign field "something"
   because "something2" is null. 
-  이 보인다면 먼저 객체를 올바르게 선언했는지 확인해보자. 
+  
+  이 에러가 보인다면 먼저 객체를 올바르게 선언했는지 확인해보자. 
+
+</br>
 
 # PS
   자바가 너무 밉다........
