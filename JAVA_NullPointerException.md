@@ -77,7 +77,7 @@ is never assigned
  
  # 결론 
   NullPointerExcpetion : Cannot assign field "something"
-  because "something2" is null. 
+  because "something2"is null. 
   
   이 에러가 보인다면 먼저 객체를 올바르게 선언했는지 확인해보자. 
 
