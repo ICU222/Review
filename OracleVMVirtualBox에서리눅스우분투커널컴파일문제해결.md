@@ -38,8 +38,163 @@ $ 고생 한 후 이를 잊지 않기 위해 방법론으로 남김 by ICU222
 
 # 2. 가상머신 터미널에 들어간 후, 다운받은 파일을 옮기고 압축 해제.
  	 - $ su 를 입력하여 루트 권한을 얻자. 쓸데 없는 거부 상황을 방지 해준다. 
- 	 - 그 후 $ cp linux-5.14.9.tar.xz /usr/src/ 을 통해 압축 파일을 커널들이 있는 위치로 복사.
- 	 - 그 다음 $ tar -xf linux-5.14.9.tar.xz 를 통해 압축 해제. 
+ 	 - 그 다음 압축 파일이 있는 폴더로 가서 $ tar -xf linux-5.14.9.tar.xz 를 통해 압축 해제. 
+	 - 최신 버젼이 linux-5.14.9라고 가정
+
+  </br>  </br>
+  ### 팁 : 디렉토리 이동하는 법
+  	- 상위 폴더로 이동하기 : $ cd .. [ cd하고 스페이스 한번 하고 ..]
+  	- 하위 폴더로 이동하기 : $ cd 폴더이름
+  	- 아주 좋은 팁 : <http://www.incodom.kr/Linux/%EA%B8%B0%EB%B3%B8%EB%AA%85%EB%A0%B9%EC%96%B4/cd>
+  </br>  </br>
+# 3. 컴파일에 필요한 툴 설치하기
+! 설치 하는데 시간이 좀 걸린다. 또한 가상머신이 장시간 가만히 있으면 알아서 화면이 꺼지는데, 이를 계속 방치하면 검은 화면에서 돌아오지 않는 경우가 있다. 화면 꺼짐이 지속되지 않도록 신경을 써 주자.  
+
+	$ sudo apt-get build-dep linux linux-image-$(uname -r)
+    
+![ex.screenshot](./image/dep.JPG)
+
+이런 에러가 뜬다면 "소프트웨어 업데이트" >> ubuntu Software >> source code를 체크해주자. 
+    
+    $ sudo apt-get install libncurses-dev flex bison openssl libssl-dev dkms libelf-dev libpci-dev libudev-dev libiberty-dev autoconf
+ 
+ 
+ </br>  </br>
+# 4. Kernel Configuration 파일을 만들자. 
+	- 커널의 구성 요소에 대한 정보를 담당하는 파일이다. 이 파일은 .config이며, 이 파일을 만드는 방법은 두 가지가 있다. 
+ </br></br>
+ ## 4-1. default .config파일을 만들기
+ ![ex.screenshot](./image/deconfig.JPG)
+ 
+ 	- 터미널에서 $ make defconfig를 통해 .config파일을 만든다. 
+ 	- 하지만 이 방법으로 만들면 마지막에 커널 컴파일에 에러가 날 수 도 있다. 필자는 그래서 다른 방법으로 만들었다. 
+</br>  </br>
+ ## 4-2. 원래 쓰던 커널의 config 복사하기
+ 	- 현재 사용 중인 커널의 config파일은 /boot 디렉토리에 존재한다. 
+ 	- $ cp /boot/config-사용중인 커널 버젼-generic ./.config 를 이용하여 복사해주자.
+  </br>  </br>
+  ### 팁 : 현재 커널 버젼 확인하는 명령어
+   	$ uname -r
+   </br>  </br>
+ ## 4-3 새로운 config file을 만들기
+	$ make menuconfig
+    or $ make config
+   
+  ### 여기서 일어날 수 있는 문제
+  ![ex.screenshot](./image/ermenuconfig.JPG)
+  
+  이런 에러와 함께 column의 사이즈가 최소 80은 나와야 된다고 한다. 
+  
+  이 문제는 가상머신의 화면을 키워도 해결이 안 된다. 아니 그러면 column사이즈가 몇 이길래? 확인해보자. 
+  
+  	# 내 화면의 row col을 확인하는 방법
+  	$ echo Columns=$COLUMNS Lines=$LINES
+    
+    # 아니면 이 방법으로 확인 가능
+    $ sudo stty size
+![ex.screenshot](./image/col.JPG)
+
+![ex.screenshot](./image/79.JPG)  
+
+ 이런!!!! 이놈의 가상머신은 col의 기본 크기가 79이다. 치사하게 1 부족하게 만들어 놓은 것이다..... 하지만 우리는 사이즈를 바꿀 수 있는 명령어를 알고 있다. 
+ 
+	 	
+ 	$ sudo stty rows 숫자 cols 숫자
+   	# 여기서 cols 80을 하면 된다. 
+    
+ 이후에 다시 make menuconfig 를 해보자. 
+
+ ![ex.screenshot](./image/menures.JPG)
+ 
+ 아주 잘 됨을 알 수 있다. 여기서 save를 눌러주자. 
+
+# 5. 커널을 컴파일 해 주자.
+
+다음 명령어를 순차적으로 입력 해 주자. 이 또한 시간이 좀 걸린다. 
+좋아하는 노래를 들으며 멘탈을 잡자. 
+
+	$ make
+    $ make moudules_install
+    $ make install
+![ex.screenshot](./image/coming.JPG)
+
+</br></br>
+
+# 6. 리부트를 하기 전의 작업을 해 주자. 
+
+    	$ vi /etc/default/grub
+        # 위 명령어를 통해 파일을 열자. 
+        
+ 그러면 다음과 같은 글이 있을 것이다. 
+ 
+![ex.screenshot](./image/ggrub.JPG)
+
+  
+요 timeout style을 #로 주석처리를 해 주자. 
+	
+    GRUB_DEFAULT=0
+    #GRUB_TIMEOUT_STYLE=hidden
+    ...
+    
+그 뒤 가장 중요한 것 : 업데이트를 해줘야 된다. 
+	
+    $ sudo update-grub
+이 명령어를 입력해야 바꾼 것이 완전히 적용이 된다. 
+
+</br></br>
+
+# 7. 리부트를 해 주자. 
+	$ reboot
+위 명령어를 입력하면 재부팅이 된다.  
+</br>
+#### 7-1. 재부팅시 다음과 같은 메뉴가 뜰 경우
+	*ubuntu
+    Advanced options for ubuntu
+    Memory test (memtest86+)
+    ...
+그렇다면 Advanced options~를 클릭하여 컴파일 했던 최신 버젼을 누르면 그 버젼으로 실행이 된다. 
+</br>
+#### 7-2. 에러가 날 경우
+![ex.screenshot](./image/noapic.JPG)
+
+인터넷에 검색을 해 봐도 가상머신의 경우를 해결하는 방법은 없다. 
+하지만 검색을 더 해본 결과, 다음과 같은 방법으로 이 문제를 해결하였다. 
+
+	$ vi /etc/default/grub
+       # 위 명령어를 통해 파일을 열자. 
+그 후 아까와 마찬가지로  GRUB_어쩌구저쩌구가 있는 위치로 가자. 그곳에 다음과 같은 문장이 있을 것이다. 
+	
+    GRUB_DEFAULT=0
+    #GRUB_TIMEOUT_STYLE=hidden
+    ...
+    GRUB_CMDLINE_LINUX_DEFUALT="quiet splash"
+여기 마지막 줄 ""에 noapic을 입력해주자. 
+
+	GRUB_DEFAULT=0
+    #GRUB_TIMEOUT_STYLE=hidden
+    ...
+    GRUB_CMDLINE_LINUX_DEFUALT="quiet splash noapic"
+
+그 뒤 똑같이 다음과 같은 명령어로 업데이트를 해 주자. 
+
+	$ sudo update-grub
+    
+그리고 다시 재부팅을 해 주자. 그러면 될 것이다. 
 
 
-## 다음에 마저 이어서...
+</br></br>
+
+# 8. 결과
+![ex.screenshot](./image/result.JPG)
+
+그림과 같이 최신 버젼인 5.14.9로 컴파일이 되었음을 알 수 있다. ( 뒤에 이름은 과제 때문에 넣은 것이다. )
+
+</br></br>
+# 9. 기타
+Q: 다른 사이트에서 컴파일하는 방법을 따라가고 있는데, .deb파일이 안보여요
+</br>
+A: 만든 디렉토리 상위에 만들어져 있다. 즉 /usr/src/inux-5.14.9에서 만들었다면 /usr/src에 .deb파일이 만들어져 있다. 
+![ex.scrrenshot](./image/man.JPG)
+
+
+추후 기억나면 추가.
