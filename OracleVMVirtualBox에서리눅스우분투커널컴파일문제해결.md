@@ -61,10 +61,10 @@ $ 고생 한 후 이를 잊지 않기 위해 방법론으로 남김 by ICU222
  
  </br>  </br>
 # 4. Kernel Configuration 파일을 만들자. 
-	- 커널의 구성 요소에 대한 정보를 담당하는 파일이다. 이 파일은 .config이며, 이 파일을 만드는 방법은 두 가지가 있다. 
+	- 커널의 구성 요소에 대한 정보를 담당하는 파일이다. 이 파일은 .config이며, 이 파일을 만드는 방법은 세 가지가 있다. 이 중에 하나를 골라서 파일을 만들자. 
  </br></br>
  ## 4-1. default .config파일을 만들기
- ![ex.screenshot](./image/deconfig.JPG)
+ ![ex.screenshot](./image/defconfig.JPG)
  
  	- 터미널에서 $ make defconfig를 통해 .config파일을 만든다. 
  	- 하지만 이 방법으로 만들면 마지막에 커널 컴파일에 에러가 날 수 도 있다. 필자는 그래서 다른 방법으로 만들었다. 
@@ -107,7 +107,7 @@ $ 고생 한 후 이를 잊지 않기 위해 방법론으로 남김 by ICU222
  ![ex.screenshot](./image/menures.JPG)
  
  아주 잘 됨을 알 수 있다. 여기서 save를 눌러주자. 
-
+ </br>  </br>
 # 5. 커널을 컴파일 해 주자.
 
 다음 명령어를 순차적으로 입력 해 주자. 이 또한 시간이 좀 걸린다. 
@@ -154,7 +154,7 @@ $ 고생 한 후 이를 잊지 않기 위해 방법론으로 남김 by ICU222
     ...
 그렇다면 Advanced options~를 클릭하여 컴파일 했던 최신 버젼을 누르면 그 버젼으로 실행이 된다. 
 </br>
-#### 7-2. 에러가 날 경우
+#### 7-2. 재부팅시 에러 : end kernel panic - Then try booting with the 'noapic' option. 을 만난 경우의 해결법
 ![ex.screenshot](./image/noapic.JPG)
 
 인터넷에 검색을 해 봐도 가상머신의 경우를 해결하는 방법은 없다. 
